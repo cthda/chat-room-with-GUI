@@ -2,7 +2,7 @@
 
 This application uses the tkinter module as the GUI module that is pre-installed
 
-Also the application uses the sqlite database to store persons' login information if they want to login
+Also the application uses the sqlite database to store persons' login information if they want to login again
 
 Python version:3.9.7
 
