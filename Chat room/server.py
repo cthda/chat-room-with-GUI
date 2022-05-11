@@ -32,11 +32,11 @@ class SqliteDatabase:
 
         self.cursor.execute("SELECT Id FROM Persons")    #for dynamic Id in sql
 
-        self.id_number_list = self.cursor.fetchall()
+        id_number_list = self.cursor.fetchall()
 
-        self.id_number = len(self.id_number_list)
+        id_number = len(id_number_list)
 
-        self.id_number += 1
+        id_number += 1
         
         self.cursor.execute(f"INSERT INTO Persons VALUES({self.id_number},'{self.username}','{self.password}')")
 
@@ -44,9 +44,9 @@ class SqliteDatabase:
 
         self.cursor.execute(f"SELECT Username FROM Persons WHERE Username = '{control_username}'")
 
-        self.result = self.cursor.fetchone()
+        result = self.cursor.fetchone()
 
-        if self.result == None:
+        if result == None:
 
             return True
 
@@ -58,9 +58,9 @@ class SqliteDatabase:
 
         self.cursor.execute(f"SELECT Username,Password FROM Persons WHERE Username = '{username_to_login}' AND Password = '{password_to_login}'")
 
-        self.result = self.cursor.fetchone()
+        result = self.cursor.fetchone()
 
-        if self.result == None:
+        if result == None:
 
             return False
 
@@ -117,7 +117,7 @@ class SocketConnection(socket.socket):
 
             try:
 
-                self.message = self.conn_obj.recv(1024)
+                message = self.conn_obj.recv(1024)
 
             except:
 
@@ -125,15 +125,15 @@ class SocketConnection(socket.socket):
 
             else:
 
-                if self.message.decode("utf-8").startswith("****UsErNamE---PasSwORd__??") == True:
+                if message.decode("utf-8").startswith("****UsErNamE---PasSwORd__??") == True:
 
-                    self.username_password_list = self.message.decode("utf-8")[28:].split(" ")
+                    username_password_list = message.decode("utf-8")[28:].split(" ")
 
-                    database_object.start_sql_connection_and_set_username_password(self.username_password_list[0],self.username_password_list[1])
+                    database_object.start_sql_connection_and_set_username_password(username_password_list[0],username_password_list[1])
 
-                    self.check_username = database_object.has_username(self.username_password_list[0])
+                    check_username = database_object.has_username(username_password_list[0])
 
-                    if self.check_username == False:
+                    if check_username == False:
 
                         try:
 
@@ -163,15 +163,15 @@ class SocketConnection(socket.socket):
 
                         lock.release()
 
-                elif self.message.decode("utf-8").startswith("****UsErNamEToLOgin---PasSwORdToLOgin__??"):
+                elif message.decode("utf-8").startswith("****UsErNamEToLOgin---PasSwORdToLOgin__??"):
 
-                    self.username_password_list_to_login = self.message.decode("utf-8")[42:].split(" ")
+                    username_password_list_to_login = message.decode("utf-8")[42:].split(" ")
 
-                    database_object.start_sql_connection_and_set_username_password(self.username_password_list_to_login[0],self.username_password_list_to_login[1])
+                    database_object.start_sql_connection_and_set_username_password(username_password_list_to_login[0],username_password_list_to_login[1])
 
-                    self.check_username_and_password = database_object.login(self.username_password_list_to_login[0],self.username_password_list_to_login[1])
+                    check_username_and_password = database_object.login(username_password_list_to_login[0],username_password_list_to_login[1])
 
-                    if self.check_username_and_password == False:
+                    if check_username_and_password == False:
 
                         try:
 
@@ -197,7 +197,7 @@ class SocketConnection(socket.socket):
 
                         database_object.close_sql_connection_and_commit()
 
-                elif self.message.decode("utf-8") == "":     #if any client closes the connection,server side connection that linked the client's connection shuts too.
+                elif message.decode("utf-8") == "":     #if any client closes the connection,server side connection that linked the client's connection shuts too.
 
                     break
 
@@ -209,7 +209,7 @@ class SocketConnection(socket.socket):
                                                        #In the client side script,if the message does not display on the chat screen,it means the client has network problems.
                         try:
 
-                            conns.send(self.message)
+                            conns.send(message)
 
                         except:
 
