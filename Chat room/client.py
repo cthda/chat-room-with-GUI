@@ -35,7 +35,7 @@ class MainWindow(tk.Tk):
 
             self.username_entry_object.delete(0,"end")
 
-            self.username_entry_object.unbind("<Button-1>",self.placeholder_username_id)
+            self.username_entry_object.unbind("<Button-1>",placeholder_username_id)
 
         self.username_entry_object = tk.Entry(
         self,
@@ -52,7 +52,7 @@ class MainWindow(tk.Tk):
 
         self.username_entry_object.configure(state="disabled",disabledbackground="white")
 
-        self.placeholder_username_id = self.username_entry_object.bind("<Button-1>",placeholder_for_username_field)
+        placeholder_username_id = self.username_entry_object.bind("<Button-1>",placeholder_for_username_field)
 
     def set_and_place_info_label(self):
 
@@ -146,7 +146,7 @@ class MainWindow(tk.Tk):
 
             self.password_entry_object.delete(0,"end")
 
-            self.password_entry_object.unbind("<Button-1>",self.placeholder_password_id)
+            self.password_entry_object.unbind("<Button-1>",placeholder_password_id)
 
             self.password_entry_object["show"] = "*"
 
@@ -165,7 +165,7 @@ class MainWindow(tk.Tk):
 
         self.password_entry_object.configure(state="disabled",disabledbackground="white")
 
-        self.placeholder_password_id = self.password_entry_object.bind("<Button-1>",placeholder_for_password_field)
+        placeholder_password_id = self.password_entry_object.bind("<Button-1>",placeholder_for_password_field)
 
     def set_and_place_enter_button(self):
 
@@ -189,7 +189,7 @@ class MainWindow(tk.Tk):
 
         try:
 
-            self.client_connection = SocketConnection(socket.AF_INET,socket.SOCK_STREAM,"127.0.0.1",11111)
+            client_connection = SocketConnection(socket.AF_INET,socket.SOCK_STREAM,"127.0.0.1",11111)
 
         except:
 
@@ -197,17 +197,17 @@ class MainWindow(tk.Tk):
 
         else:
 
-            self.username = self.username_input_entry.get()
+            username = self.username_input_entry.get()
 
-            self.password = self.password_input_entry.get()
+            password = self.password_input_entry.get()
 
             try:
 
-                self.client_connection.send(f"****UsErNamEToLOgin---PasSwORdToLOgin__?? {self.username} {self.password}".encode("utf-8"))  #sqlite has no server
+                client_connection.send(f"****UsErNamEToLOgin---PasSwORdToLOgin__?? {username} {password}".encode("utf-8"))  #sqlite has no server
 
             except:
 
-                self.client_connection.close()
+                client_connection.close()
 
                 msgbox.showerror("Error","Connection Error")
 
@@ -215,43 +215,43 @@ class MainWindow(tk.Tk):
 
                 try:
 
-                    self.client_connection.settimeout(5.5)
+                    client_connection.settimeout(5.5)
 
-                    self.message = self.client_connection.recv(1024).decode("utf-8")  #May raise error because of some cases
+                    message = client_connection.recv(1024).decode("utf-8")  #May raise error because of some cases
 
-                    self.client_connection.settimeout(None)
+                    client_connection.settimeout(None)
 
-                    if self.message == "FALSE":   #Wrong username or password
+                    if message == "FALSE":   #Wrong username or password
 
-                        self.client_connection.close()
+                        client_connection.close()
 
                         msgbox.showerror("Error","Wrong username or password")
 
-                    elif self.message == "TRUE":     #If no problem for username and password while entering
+                    elif message == "TRUE":     #If no problem for username and password while entering
 
-                        self.chat_window = ChatWindow(self)  
+                        chat_window = ChatWindow(self)  
 
-                        self.user_input = self.chat_window.create_input_of_users_and_return_object()
+                        user_input = chat_window.create_input_of_users_and_return_object()
 
-                        self.send_button_object = self.chat_window.create_send_button_and_return_object()
+                        send_button_object = chat_window.create_send_button_and_return_object()
 
-                        self.text_screen = self.chat_window.create_text_widget_to_display_messages_and_return_object()
+                        text_screen = chat_window.create_text_widget_to_display_messages_and_return_object()
 
-                        self.thread_to_get_message = threading.Thread(target=self.client_connection.recv_messages,args=(self.text_screen,),daemon=True)
+                        thread_to_get_message = threading.Thread(target=client_connection.recv_messages,args=(text_screen,),daemon=True)
 
-                        self.thread_to_get_message.start()
+                        thread_to_get_message.start()
 
-                        self.send_button_object["command"] = lambda:self.client_connection.send_messages(self.user_input,self.username)
+                        send_button_object["command"] = lambda:client_connection.send_messages(user_input,username)
 
                 except socket.timeout:
 
-                    self.client_connection.close()
+                    client_connection.close()
 
                     msgbox.showerror("Error","Connection timeout")
 
                 except:
 
-                    self.client_connection.close()
+                    client_connection.close()
 
                     msgbox.showerror("Error","Connection has been shutted")
 
@@ -285,7 +285,7 @@ class MainWindow(tk.Tk):
 
             self.username_entry_object.delete(0,"end")
 
-            self.username_entry_object.unbind("<Button-1>",self.placeholder_username_id)
+            self.username_entry_object.unbind("<Button-1>",placeholder_username_id)
 
         self.username_entry_object["state"] = "normal"
 
@@ -295,7 +295,7 @@ class MainWindow(tk.Tk):
 
         self.username_entry_object.configure(state="disabled",disabledbackground="white")
 
-        self.placeholder_username_id = self.username_entry_object.bind("<Button-1>",placeholder_for_username_field)
+        placeholder_username_id = self.username_entry_object.bind("<Button-1>",placeholder_for_username_field)
 
         def placeholder_for_password_field(event):
 
@@ -303,7 +303,7 @@ class MainWindow(tk.Tk):
 
             self.password_entry_object.delete(0,"end")
 
-            self.password_entry_object.unbind("<Button-1>",self.placeholder_password_id)
+            self.password_entry_object.unbind("<Button-1>",placeholder_password_id)
 
             self.password_entry_object["show"] = "*"
 
@@ -315,7 +315,7 @@ class MainWindow(tk.Tk):
 
         self.password_entry_object.configure(state="disabled",disabledbackground="white")
 
-        self.placeholder_password_id = self.password_entry_object.bind("<Button-1>",placeholder_for_password_field)
+        placeholder_password_id = self.password_entry_object.bind("<Button-1>",placeholder_for_password_field)
 
         def sign_up_person():  #This one actually starts to sign up the person to the chat room
 
@@ -399,7 +399,7 @@ class MainWindow(tk.Tk):
 
             self.username_entry_object.delete(0,"end")
 
-            self.username_entry_object.unbind("<Button-1>",self.placeholder_username_id)
+            self.username_entry_object.unbind("<Button-1>",placeholder_username_id)
 
         self.username_entry_object["state"] = "normal"
 
@@ -409,7 +409,7 @@ class MainWindow(tk.Tk):
 
         self.username_entry_object.configure(state="disabled",disabledbackground="white")
 
-        self.placeholder_username_id = self.username_entry_object.bind("<Button-1>",placeholder_for_username_field)
+        placeholder_username_id = self.username_entry_object.bind("<Button-1>",placeholder_for_username_field)
 
         def placeholder_for_password_field(event):
 
@@ -417,7 +417,7 @@ class MainWindow(tk.Tk):
 
             self.password_entry_object.delete(0,"end")
 
-            self.password_entry_object.unbind("<Button-1>",self.placeholder_password_id)
+            self.password_entry_object.unbind("<Button-1>",placeholder_password_id)
 
             self.password_entry_object["show"] = "*"
 
@@ -429,7 +429,7 @@ class MainWindow(tk.Tk):
 
         self.password_entry_object.configure(state="disabled",disabledbackground="white")
 
-        self.placeholder_password_id = self.password_entry_object.bind("<Button-1>",placeholder_for_password_field)
+        placeholder_password_id = self.password_entry_object.bind("<Button-1>",placeholder_for_password_field)
 
 
 
@@ -515,13 +515,11 @@ class SocketConnection(socket.socket):
 
     def recv_messages(self,show_incoming_messages_on_screen:scrolledtxt.ScrolledText): #Thread will be handling
 
-        self.show_incoming_messages_on_screen = show_incoming_messages_on_screen
-
         while True:
 
             try:
 
-                self.incoming_messages = self.recv(1024).decode("utf-8")
+                incoming_messages = self.recv(1024).decode("utf-8")
 
             except:
 
@@ -529,29 +527,25 @@ class SocketConnection(socket.socket):
 
             else:
 
-                self.show_incoming_messages_on_screen["state"] = "normal"
+                show_incoming_messages_on_screen["state"] = "normal"
 
-                self.show_incoming_messages_on_screen.insert(tk.END,self.incoming_messages)
+                show_incoming_messages_on_screen.insert(tk.END,incoming_messages)
 
-                self.show_incoming_messages_on_screen.see(tk.END)
+                show_incoming_messages_on_screen.see(tk.END)
 
-                self.show_incoming_messages_on_screen["state"] = "disabled"
+                show_incoming_messages_on_screen["state"] = "disabled"
 
     def send_messages(self,messages_in_user_input_scrolledtext:scrolledtxt.ScrolledText,username):
 
-        self.messages_in_user_input_scrolledtext = messages_in_user_input_scrolledtext
+        messages_to_be_sent = messages_in_user_input_scrolledtext.get("1.0",tk.END)
 
-        self.username = username
+        messages_in_user_input_scrolledtext.delete("1.0","end")
 
-        self.messages_to_be_sent = self.messages_in_user_input_scrolledtext.get("1.0",tk.END)
-
-        self.messages_in_user_input_scrolledtext.delete("1.0","end")
-
-        if self.messages_to_be_sent.isspace() == False:
+        if messages_to_be_sent.isspace() == False:
 
             try:
 
-                self.send(f"{self.username}:{self.messages_to_be_sent}".encode("utf-8"))
+                self.send(f"{username}:{messages_to_be_sent}".encode("utf-8"))
 
             except:
 
