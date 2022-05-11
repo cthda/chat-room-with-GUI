@@ -38,7 +38,7 @@ class SqliteDatabase:
 
         id_number += 1
         
-        self.cursor.execute(f"INSERT INTO Persons VALUES({self.id_number},'{self.username}','{self.password}')")
+        self.cursor.execute(f"INSERT INTO Persons VALUES({id_number},'{self.username}','{self.password}')")
 
     def has_username(self,control_username):
 
